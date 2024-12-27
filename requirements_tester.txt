@@ -1,0 +1,6 @@
+black==24.10.0
+pylint==3.3.0
+pytest==8.3.0
+selenium==4.27.0
+webdriver-manager==4.0.2
+requests==2.32.3

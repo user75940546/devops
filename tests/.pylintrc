@@ -1,0 +1,18 @@
+[MAIN]
+
+[MESSAGES CONTROL]
+disable=all
+enable=missing-function-docstring,
+       missing-module-docstring,
+        invalid-name,
+        line-too-long,
+        deprecated-module,
+        logging-too-few-args,
+        condition-evals-to-constant,
+        return-in-finally,
+        lost-exception,
+        duplicate-key
+
+[REPORTS]
+output-format=text
+reports=no
