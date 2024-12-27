@@ -1,0 +1,28 @@
+FROM ubuntu:22.04
+
+RUN apt-get update && apt-get install -y \
+    python3=3.10.6-1~22.04.1 \
+    python3-pip=22.0.2+dfsg-1ubuntu0.5 \
+    git=1:2.34.1-1ubuntu1.11 \
+    openssh-server=1:8.9p1-3ubuntu0.10
+
+RUN mkdir -p /root/.ssh && \
+    chmod 700 /root/.ssh && \
+    mkdir /var/run/sshd && \
+    sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config && \
+    sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
+
+COPY ssh/authorized_keys/docker_rsa.pub /root/.ssh/authorized_keys
+RUN chmod 600 /root/.ssh/authorized_keys
+
+RUN git clone https://github.com/moevm/devops-examples.git
+COPY requirements_app.txt devops-examples/EXAMPLE_APP/requirements.txt
+
+WORKDIR devops-examples/EXAMPLE_APP
+
+RUN pip3 install -r requirements.txt
+
+COPY host.diff .
+RUN patch main.py < host.diff
+
+CMD ["sh", "-c", "/usr/sbin/sshd -D & python3 main.py"]
